@@ -1,12 +1,8 @@
 import React, { useState } from "react";
+import Filter from "./components/Filter";
+import PersonForm from "./components/PersonForm";
+import Persons from "./components/Persons";
 
-const Person = ({person}) => {
-  return (
-    <li>
-      {person.fname} {person.number}
-    </li>
-  )
-};
 
 const App = () => {
   // ESTADOS
@@ -34,8 +30,6 @@ const App = () => {
       id: persons.length + 1,
       [name]: value
     }));
-
-    console.log(person);
   };
 
   const addPerson = (event) => {
@@ -70,47 +64,24 @@ const App = () => {
     <div>
       <h2>Phonebook</h2>
 
-      <div>
-        filter shown with
-        <input
-          value={personSearch}
-          onChange={handlePersonSearch}
-        />
-      </div>
+      <Filter 
+        handlePersonSearch={handlePersonSearch} 
+        personSearch={personSearch}
+      />
 
       <h2>add a new</h2>
 
-      <form onSubmit={addPerson}>
-        <div>
-          name: 
-          <input
-            value={person.fname}
-            onChange={handleChange}
-            name="fname"
-          />
-        </div>
-
-        <div>
-          number: 
-          <input
-            value={person.number}
-            onChange={handleChange}
-            name="number"
-          />
-        </div>
-
-        <div>
-          <button type="submit">add</button>
-        </div>
-      </form>
+      <PersonForm 
+        addPerson={addPerson} 
+        handleChange={handleChange} 
+        person={person}
+      />
 
       <h2>Numbers</h2>
       
-      <ul>
-        {personsFiltered.map(person => 
-          <Person key={person.id} person={person} />  
-        )}
-      </ul>
+      <Persons 
+        personsFiltered={personsFiltered} 
+      />
     </div>
   );
 }
