@@ -3,7 +3,7 @@ import React, { useState } from "react";
 const Person = ({person}) => {
   return (
     <li>
-      {person.name}
+      {person.fname} {person.number}
     </li>
   )
 };
@@ -11,29 +11,42 @@ const Person = ({person}) => {
 const App = () => {
   const [ persons, setPersons ] = useState([
     {
-      name: 'Arto Hellas' 
+      fname: 'Arto Hellas',
+      number: 11111
     }
   ]);
-  const [ newName, setNewName ] = useState('');
 
-  const handlePersonChange = (event) => {
-    setNewName(event.target.value);
+  const [ person, setPerson ] = useState({fname: '', number: ''});
+
+  const handleChange = (event) => {
+
+    const {name, value} = event.target;
+
+    setPerson(prevState => ({
+      ...prevState,
+      [name]: value
+    }));
+
+    console.log(person);
   };
 
   const addPerson = (event) => {
     event.preventDefault();
-    const personObject = {
-      name: newName
-    };
 
-    const person = persons.filter(person => person.name === newName);
+    const personsFiltered = persons.filter(p => p.fname === person.fname);
 
-    if( person.length !== 0 ) {
-      window.alert(`${newName} is already registered.`);
+    if( personsFiltered.length !== 0 ) {
+      window.alert(`${person.fname} is already registered.`);
     } else {
-      if( newName !== '' ) {
-        setPersons(persons.concat(personObject));
-        setNewName('');
+      if( person.fname !== '' ) {
+        /* setPerson(prevState => ({
+          ...prevState,
+          fname: person.fname,
+          number: person.number
+        })); */
+
+        setPersons(persons.concat(person));
+        setPerson({fname: '', number: ''});
       } else {
         window.alert(`Empty value.`);
       }
@@ -49,10 +62,19 @@ const App = () => {
         <div>
           name: 
           <input
-            value={newName}
-            onChange={handlePersonChange}
+            value={person.fname}
+            onChange={handleChange}
+            name="fname"
           />
-          <div>debug: {newName}</div>
+        </div>
+
+        <div>
+          number: 
+          <input
+            value={person.number}
+            onChange={handleChange}
+            name="number"
+          />
         </div>
 
         <div>
@@ -64,7 +86,7 @@ const App = () => {
       
       <ul>
         {persons.map(person => 
-          <Person key={person.name} person={person} />  
+          <Person key={person.fname} person={person} />  
         )}
       </ul>
     </div>
