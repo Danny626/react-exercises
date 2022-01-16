@@ -1,20 +1,13 @@
 import React from "react";
+import Person from "./Person";
 
-const Persons = ({personsFiltered}) => {
+const Persons = ({personsFiltered, deletePerson}) => {
     return (
       <ul>
         {personsFiltered.map(person => 
-          <Person key={person.id} person={person} />  
+          <Person key={person.id} person={person} deletePerson={deletePerson} />  
         )}
       </ul>
-    );
-};
-
-const Person = ({person}) => {
-    return (
-      <li>
-        {person.fname} {person.number}
-      </li>
     );
 };
 

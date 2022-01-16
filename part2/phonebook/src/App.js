@@ -72,6 +72,24 @@ const App = () => {
     setPersonsFiltered(personsFiltered);
   };
 
+  const deletePerson = (id, name) => {
+    console.log(id, name);
+    if(window.confirm(`Está seguro de eliminar a ${name}`)) {
+      personService
+        .remove(id)
+        .then(response => {
+          console.log(`${name} eliminado correctamente`);
+          setPersons(persons.filter(person => person.id !== id));
+          setPersonsFiltered(persons.filter(person => person.id !== id));
+        })
+        .catch(error => {
+          alert(`La persona ${name} ya fué eliminada del servidor`);
+          setPersons(persons.filter(person => person.id !== id));
+          setPersonsFiltered(persons.filter(person => person.id !== id));
+        })
+    }
+  }
+
   return (
     <div>
       <h2>Phonebook</h2>
@@ -92,7 +110,8 @@ const App = () => {
       <h2>Numbers</h2>
       
       <Persons 
-        personsFiltered={personsFiltered} 
+        personsFiltered={personsFiltered}
+        deletePerson={deletePerson}
       />
     </div>
   );
