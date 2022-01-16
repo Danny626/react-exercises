@@ -31,7 +31,7 @@ const App = () => {
 
     setPerson(prevState => ({
       ...prevState,
-      id: persons.length + 1,
+      /* id: persons.length + 1, */
       [name]: value
     }));
   };
@@ -42,14 +42,34 @@ const App = () => {
     const personsFiltered = persons.filter(p => p.fname === person.fname);
 
     if( personsFiltered.length !== 0 ) {
-      window.alert(`${person.fname} is already registered.`);
+      if( window.confirm(`${person.fname} ya se encuentra registrado, desea reemplazar el número?`) ) {
+
+        const updatedPerson = {
+          ...person,
+          id: personsFiltered[0].id
+        };
+
+        personService
+          .update(updatedPerson.id, updatedPerson)
+          .then(returnedPerson => {
+            setPersons(persons.map(person => person.id === updatedPerson.id ? returnedPerson : person));
+            setPersonsFiltered(persons.map(person => person.id === updatedPerson.id ? returnedPerson : person));
+            alert(`${returnedPerson.fname} fué modificado correctamente`);
+          });
+      }
     } else {
       if( person.fname !== '' ) {
+        const createdPerson = {
+          ...person,
+          id: persons.length + 1,
+        }
+
         personService
           .create(person)
           .then(returnedPerson => {
-            setPersons(persons.concat(person));
-            setPersonsFiltered(persons.concat(person));
+            setPersons(persons.concat(createdPerson));
+            setPersonsFiltered(persons.concat(createdPerson));
+            alert(`${returnedPerson.fname} fué agregado correctamente`);
           })
           .catch(error => {
             alert(`Ocurrió un error al guardar la persona`);
