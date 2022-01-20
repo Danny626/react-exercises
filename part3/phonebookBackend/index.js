@@ -1,6 +1,8 @@
 const express = require('express');
 const app = express();
 
+app.use(express.json());
+
 let persons = [
     { 
       "id": 1,
@@ -70,6 +72,22 @@ app.post('/api/persons', (request, response) => {
 	persons = persons.concat(person);
 
 	response.json(person);
+});
+
+// get phonebook length and time request
+app.get('/info', (request, response) => {
+	const currentDate = Intl.DateTimeFormat('en', { dateStyle: 'medium', timeStyle: 'long' , hour12: false}).format(new Date());
+	const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone
+	const info = `
+		<div>
+			<p>Phonebook has info for ${persons.length} people</p>
+		</div>
+
+		<div>
+			<p>${currentDate} (${timeZone})</p>
+		</div>`;
+	
+	response.send(info);
 });
 
 const generateId = () => {
